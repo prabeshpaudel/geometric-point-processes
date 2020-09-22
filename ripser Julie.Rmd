@@ -1,0 +1,153 @@
+---
+title: "Ripser"
+author: "Ken Wang"
+date: "9/15/2020"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r,message=FALSE,warning=FALSE}
+library("ripserr")
+library(tidyverse)
+
+
+```
+
+```{r}
+trial=10000
+rand = data.frame(replicate(2*trial,runif(100, -10, 10)))
+deg0 = data.frame(matrix(0, nrow = 99, ncol = trial))
+deg1 = data.frame(num=numeric(trial),birth_mean=numeric(trial),birth_min=numeric(trial),
+                  birth_max=numeric(trial),death_mean=numeric(trial),death_min=numeric(trial),
+                  death_max=numeric(trial),range_mean=numeric(trial),range_min=numeric(trial),
+                  range_max=numeric(trial))
+
+for(i in 1:trial){
+  rips = vietoris_rips(rand[,c(i,i+trial)])
+  deg0[,i] = rips$death[1:99]
+  rips1 = rips[100:nrow(rips),]
+  rips1$range = rips1$death - rips1$birth
+  deg1$num[i] = nrow(rips1)
+  deg1$birth_min[i] = rips1$birth[nrow(rips1)]
+  deg1$birth_max[i] = rips1$birth[1]
+  deg1$birth_mean[i] = mean(rips1$birth)
+  deg1$death_min[i] = min(rips1$death)
+  deg1$death_max[i] = max(rips1$death)
+  deg1$death_mean[i] = mean(rips1$death)
+  deg1$range_min[i] = min(rips1$range)
+  deg1$range_max[i] = max(rips1$range)
+  deg1$range_mean[i] = mean(rips1$range)
+}
+```
+
+```{r}
+num_dist = rnorm(n = length(deg1$num), mean = mean(deg1$num), sd = sd(deg1$num))
+ks.test(deg1$num,num_dist)
+```
+
+
+```{r}
+# degree 0
+(range(deg0)) # range
+deg0row_means = rowMeans(deg0) # rowmeans
+plot1 = data.frame(num=1:99,length=deg0row_means)
+plot1 %>%
+  ggplot(aes(x=num,y=length))+
+  geom_bar(stat="identity", fill="steelblue")+
+  theme_minimal()
+
+
+
+```
+
+```{r,warning=FALSE}
+# degree 1
+#summarise_all(deg1,list(min=min,max=max,mean=mean))
+summary(deg1$num)
+summary(deg1$birth_mean)
+summary(deg1$birth_min)
+summary(deg1$birth_max)
+summary(deg1$death_mean)
+summary(deg1$death_min)
+summary(deg1$death_max)
+summary(deg1$range_mean)
+summary(deg1$range_min)
+summary(deg1$range_max)
+
+deg1$trial=1:1000
+
+deg1 %>%
+  ggplot()+
+  geom_histogram(aes(x=num),stat="bin")
+
+deg1 %>%
+  ggplot()+
+  geom_histogram(aes(x=birth_mean),stat="bin")
+
+deg1 %>%
+  ggplot()+
+  geom_histogram(aes(x=birth_min),stat="bin")
+
+deg1 %>%
+  ggplot()+
+  geom_histogram(aes(x=birth_max),stat="bin")
+
+deg1 %>%
+  ggplot()+
+  geom_histogram(aes(x=death_mean),stat="bin")
+
+deg1 %>%
+  ggplot()+
+  geom_histogram(aes(x=death_min),stat="bin")
+
+deg1 %>%
+  ggplot()+
+  geom_histogram(aes(x=death_max),stat="bin")
+
+deg1 %>%
+  ggplot()+
+  geom_histogram(aes(x=range_mean),stat="bin")
+
+deg1 %>%
+  ggplot()+
+  geom_histogram(aes(x=range_min),stat="bin")
+
+deg1 %>%
+  ggplot()+
+  geom_histogram(aes(x=range_max),stat="bin")
+```
+
+
+```{r}
+library(fitdistrplus)
+ks.test(deg1, "pnorm", mean=birth_mean, sd=sd(deg1))
+fit.norm <- fitdist(deg1$birth_mean, "norm")
+plot(fit.norm)
+
+fit.norm <- fitdist(deg1$num, "norm")
+plot(fit.norm)
+
+fit.norm <- fitdist(deg1$death_mean, "norm")
+plot(fit.norm)
+
+fit.norm <- fitdist(deg0row_means, "norm")
+plot(fit.norm)
+```
+
+```{r}
+deg_01<-pivot_longer(deg0, cols=1:1000)
+deg_01 %>% 
+  ggplot(aes())+
+  geom_histogram(aes(x=value), stat="bin")
+
+fit.norm <- fitdist(deg_01$value, "norm")
+plot(fit.norm)
+ks.test(deg_01, "pnorm", mean=mean(deg_01), sd=sd(deg_01))
+
+```
+
