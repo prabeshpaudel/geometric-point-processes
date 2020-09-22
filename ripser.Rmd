@@ -15,15 +15,16 @@ library(tidyverse)
 ```
 
 ```{r}
-rand = data.frame(replicate(2000,runif(100, -10, 10)))
-deg0 = data.frame(matrix(0, nrow = 99, ncol = 1000))
-deg1 = data.frame(num=numeric(1000),birth_mean=numeric(1000),birth_min=numeric(1000),
-                  birth_max=numeric(1000),death_mean=numeric(1000),death_min=numeric(1000),
-                  death_max=numeric(1000),range_mean=numeric(1000),range_min=numeric(1000),
-                  range_max=numeric(1000))
+trial = 1000
+rand = data.frame(replicate(2*trial,runif(100, -10, 10)))
+deg0 = data.frame(matrix(0, nrow = 99, ncol = trial))
+deg1 = data.frame(num=numeric(trial),birth_mean=numeric(trial),birth_min=numeric(trial),
+                  birth_max=numeric(trial),death_mean=numeric(trial),death_min=numeric(trial),
+                  death_max=numeric(trial),range_mean=numeric(trial),range_min=numeric(trial),
+                  range_max=numeric(trial))
 
-for(i in 1:1000){
-  rips = vietoris_rips(rand[,c(i,i+1000)])
+for(i in 1:trial){
+  rips = vietoris_rips(rand[,c(i,i+trial)])
   deg0[,i] = rips$death[1:99]
   rips1 = rips[100:nrow(rips),]
   rips1$range = rips1$death - rips1$birth
@@ -70,48 +71,114 @@ summary(deg1$death_max)
 summary(deg1$range_mean)
 summary(deg1$range_min)
 summary(deg1$range_max)
+```
 
-deg1$trial=1:1000
-
+```{r}
 deg1 %>%
   ggplot(aes(x=as.factor(num)))+
   geom_bar(fill="steelblue")+
   theme_minimal()
-  
+
+num_dist = rnorm(n = length(deg1$num), mean = mean(deg1$num), sd = sd(deg1$num))
+ks.test(deg1$num,num_dist)
+```
+
+```{r}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=birth_mean),stat="bin")
 
+birth_mean_dist = rnorm(n = length(deg1$birth_mean),
+                        mean = mean(deg1$birth_mean),
+                        sd = sd(deg1$birth_mean))
+ks.test(deg1$birth_mean,birth_mean_dist)
+```
+
+```{r}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=birth_min),stat="bin")
 
+birth_min_dist = rnorm(n = length(deg1$birth_min),
+                        mean = mean(deg1$birth_min),
+                        sd = sd(deg1$birth_min))
+ks.test(deg1$birth_min,birth_min_dist)
+```
+
+```{r}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=birth_max),stat="bin")
 
+birth_max_dist = rnorm(n = length(deg1$birth_max),
+                        mean = mean(deg1$birth_max),
+                        sd = sd(deg1$birth_max))
+ks.test(deg1$birth_max,birth_max_dist)
+```
+
+```{r}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=death_mean),stat="bin")
 
+death_mean_dist = rnorm(n = length(deg1$death_mean),
+                        mean = mean(deg1$death_mean),
+                        sd = sd(deg1$death_mean))
+ks.test(deg1$death_mean,death_mean_dist)
+```
+
+```{r}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=death_min),stat="bin")
 
+death_min_dist = rnorm(n = length(deg1$death_min),
+                        mean = mean(deg1$death_min),
+                        sd = sd(deg1$death_min))
+ks.test(deg1$death_min,death_min_dist)
+```
+
+```{r}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=death_max),stat="bin")
 
+death_max_dist = rnorm(n = length(deg1$death_max),
+                        mean = mean(deg1$death_max),
+                        sd = sd(deg1$death_max))
+ks.test(deg1$death_max,death_max_dist)
+```
+```{r}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=range_mean),stat="bin")
 
+range_mean_dist = rnorm(n = length(deg1$range_mean),
+                        mean = mean(deg1$range_mean),
+                        sd = sd(deg1$range_mean))
+ks.test(deg1$range_mean,range_mean_dist)
+```
+
+```{r}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=range_min),stat="bin")
 
+range_min_dist = rnorm(n = length(deg1$range_min),
+                        mean = mean(deg1$range_min),
+                        sd = sd(deg1$range_min))
+ks.test(deg1$range_min,range_min_dist)
+```
+
+
+```{r}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=range_max),stat="bin")
+
+range_max_dist = rnorm(n = length(deg1$range_max),
+                        mean = mean(deg1$range_max),
+                        sd = sd(deg1$range_max))
+ks.test(deg1$range_max,range_max_dist)
 ```
 
