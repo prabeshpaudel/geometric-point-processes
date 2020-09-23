@@ -12,12 +12,14 @@ output:
 ```{r,message=FALSE,warning=FALSE}
 library("ripserr")
 library(tidyverse)
+library(fitdistrplus)
 ```
 
 ```{r}
 trial = 1000
-rand = data.frame(replicate(2*trial,runif(100, -10, 10)))
-deg0 = data.frame(matrix(0, nrow = 99, ncol = trial))
+num = 100
+rand = data.frame(replicate(2*trial,runif(num, -10, 10)))
+deg0 = data.frame(matrix(0, nrow = num - 1, ncol = trial))
 deg1 = data.frame(num=numeric(trial),birth_mean=numeric(trial),birth_min=numeric(trial),
                   birth_max=numeric(trial),death_mean=numeric(trial),death_min=numeric(trial),
                   death_max=numeric(trial),range_mean=numeric(trial),range_min=numeric(trial),
@@ -25,8 +27,8 @@ deg1 = data.frame(num=numeric(trial),birth_mean=numeric(trial),birth_min=numeric
 
 for(i in 1:trial){
   rips = vietoris_rips(rand[,c(i,i+trial)])
-  deg0[,i] = rips$death[1:99]
-  rips1 = rips[100:nrow(rips),]
+  deg0[,i] = rips$death[1:(num - 1)]
+  rips1 = rips[num:nrow(rips),]
   rips1$range = rips1$death - rips1$birth
   deg1$num[i] = nrow(rips1)
   deg1$birth_min[i] = rips1$birth[nrow(rips1)]
@@ -45,17 +47,11 @@ for(i in 1:trial){
 # degree 0
 (range(deg0)) # range
 deg0row_means = rowMeans(deg0) # rowmeans
-plot1 = data.frame(num=1:99,length=deg0row_means)
+plot1 = data.frame(num=1:(num-1),length=deg0row_means)
 plot1 %>%
   ggplot(aes(x=num,y=length))+
   geom_bar(stat="identity", fill="steelblue")+
   theme_minimal()
-
-deg0_1 = pivot_longer(deg0,cols=1:1000)
-deg0_1 %>%
-  ggplot()+
-  geom_histogram(aes(x=value),stat="bin")
-summary(deg0_1$value)
 ```
 
 ```{r,warning=FALSE}
@@ -74,13 +70,44 @@ summary(deg1$range_max)
 ```
 
 ```{r}
+deg0_1 = pivot_longer(deg0,cols=1:trial)
+deg0_1 %>%
+  ggplot()+
+  geom_histogram(aes(x=value),stat="bin")
+summary(deg0_1$value)
+
+fit.gamma <- fitdist(deg0_1$value, distr = "gamma", method = "mle")
+summary(fit.gamma)
+plot(fit.gamma)
+
+num1_dist = rgamma(n = length(deg0_1$value), fit.gamma$estimate[1], fit.gamma$estimate[2])
+ks.test(deg0_1$value,num1_dist)
+
+fit.weibull <- fitdist(deg0_1$value, distr = "weibull", method = "mle")
+summary(fit.weibull)
+plot(fit.weibull)
+
+num1_dist1 = rweibull(n = nrow(deg0_1), fit.weibull$estimate[1],
+                      fit.weibull$estimate[2])
+ks.test(deg0_1$value,num1_dist1)
+```
+
+```{r}
+is_norm_dist = function(values){
+  fit.norm = fitdist(values, distr = "norm", method = "mle")
+  r_dist = rnorm(n = length(values), fit.norm$estimate[1], fit.norm$estimate[2])
+  ks.test(values,r_dist)
+}
+```
+
+
+```{r}
 deg1 %>%
   ggplot(aes(x=as.factor(num)))+
   geom_bar(fill="steelblue")+
   theme_minimal()
 
-num_dist = rnorm(n = length(deg1$num), mean = mean(deg1$num), sd = sd(deg1$num))
-ks.test(deg1$num,num_dist)
+is_norm_dist(deg1$num)
 ```
 
 ```{r}
@@ -88,10 +115,7 @@ deg1 %>%
   ggplot()+
   geom_histogram(aes(x=birth_mean),stat="bin")
 
-birth_mean_dist = rnorm(n = length(deg1$birth_mean),
-                        mean = mean(deg1$birth_mean),
-                        sd = sd(deg1$birth_mean))
-ks.test(deg1$birth_mean,birth_mean_dist)
+is_norm_dist(deg1$birth_mean)
 ```
 
 ```{r}
@@ -99,10 +123,7 @@ deg1 %>%
   ggplot()+
   geom_histogram(aes(x=birth_min),stat="bin")
 
-birth_min_dist = rnorm(n = length(deg1$birth_min),
-                        mean = mean(deg1$birth_min),
-                        sd = sd(deg1$birth_min))
-ks.test(deg1$birth_min,birth_min_dist)
+is_norm_dist(deg1$birth_min)
 ```
 
 ```{r}
@@ -110,10 +131,7 @@ deg1 %>%
   ggplot()+
   geom_histogram(aes(x=birth_max),stat="bin")
 
-birth_max_dist = rnorm(n = length(deg1$birth_max),
-                        mean = mean(deg1$birth_max),
-                        sd = sd(deg1$birth_max))
-ks.test(deg1$birth_max,birth_max_dist)
+is_norm_dist(deg1$birth_max)
 ```
 
 ```{r}
@@ -121,21 +139,15 @@ deg1 %>%
   ggplot()+
   geom_histogram(aes(x=death_mean),stat="bin")
 
-death_mean_dist = rnorm(n = length(deg1$death_mean),
-                        mean = mean(deg1$death_mean),
-                        sd = sd(deg1$death_mean))
-ks.test(deg1$death_mean,death_mean_dist)
+is_norm_dist(deg1$death_mean)
 ```
 
-```{r}
+```{r,warning=FALSE}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=death_min),stat="bin")
 
-death_min_dist = rnorm(n = length(deg1$death_min),
-                        mean = mean(deg1$death_min),
-                        sd = sd(deg1$death_min))
-ks.test(deg1$death_min,death_min_dist)
+is_norm_dist(deg1$death_min)
 ```
 
 ```{r}
@@ -143,20 +155,15 @@ deg1 %>%
   ggplot()+
   geom_histogram(aes(x=death_max),stat="bin")
 
-death_max_dist = rnorm(n = length(deg1$death_max),
-                        mean = mean(deg1$death_max),
-                        sd = sd(deg1$death_max))
-ks.test(deg1$death_max,death_max_dist)
+is_norm_dist(deg1$death_max)
 ```
+
 ```{r}
 deg1 %>%
   ggplot()+
   geom_histogram(aes(x=range_mean),stat="bin")
 
-range_mean_dist = rnorm(n = length(deg1$range_mean),
-                        mean = mean(deg1$range_mean),
-                        sd = sd(deg1$range_mean))
-ks.test(deg1$range_mean,range_mean_dist)
+is_norm_dist(deg1$range_mean)
 ```
 
 ```{r}
@@ -164,10 +171,7 @@ deg1 %>%
   ggplot()+
   geom_histogram(aes(x=range_min),stat="bin")
 
-range_min_dist = rnorm(n = length(deg1$range_min),
-                        mean = mean(deg1$range_min),
-                        sd = sd(deg1$range_min))
-ks.test(deg1$range_min,range_min_dist)
+is_norm_dist(deg1$range_min)
 ```
 
 
@@ -176,8 +180,5 @@ deg1 %>%
   ggplot()+
   geom_histogram(aes(x=range_max),stat="bin")
 
-range_max_dist = rnorm(n = length(deg1$range_max),
-                        mean = mean(deg1$range_max),
-                        sd = sd(deg1$range_max))
-ks.test(deg1$range_max,range_max_dist)
+is_norm_dist(deg1$range_max)
 ```
