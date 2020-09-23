@@ -181,4 +181,3 @@ range_max_dist = rnorm(n = length(deg1$range_max),
                         sd = sd(deg1$range_max))
 ks.test(deg1$range_max,range_max_dist)
 ```
-

@@ -1,0 +1,50 @@
+---
+title: "Ripser Distributions"
+author: "Ken Wang"
+date: "9/22/2020"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+---
+
+```{r,message=FALSE,warning=FALSE}
+library("ripserr")
+library(tidyverse)
+```
+
+```{r}
+deg0_mean = function(num, trial = 100, range = 10){
+  rand = data.frame(replicate(2 * trial,runif(num, range * -1, range))) # random uniform
+  result = data.frame(deg0=numeric(trial),deg1=numeric(trial))
+  for(i in 1:trial){
+    rips = vietoris_rips(rand[,c(i,i + trial)]) # rips
+    result$deg0[i] = mean(rips$death[1:(num-1)]) # mean of all bars
+    result$deg1[i] = nrow(rips) - (num - 1) # number of deg 1 bars
+  }
+  return(colMeans(result)) # mean of all trials
+}
+```
+
+```{r}
+deg0_len_dist = data.frame(num=c(10,20,30,40,50,60,70,80,90,100,150,200,500))
+results = map(deg0_len_dist$num,deg0_mean)
+results = as.data.frame(t(as.matrix(as.data.frame(results))))
+results = data.frame(num=deg0_len_dist$num,results)
+rownames(results)=NULL
+
+results %>%
+  ggplot(aes(x=num,y=deg0))+
+  geom_point()+
+  geom_line()
+```
+
+```{r}
+results %>%
+  ggplot(aes(x=num,y=deg1))+
+  geom_point()+
+  geom_line()
+```
+
+
