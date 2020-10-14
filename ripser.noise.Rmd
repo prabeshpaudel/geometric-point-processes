@@ -1,0 +1,98 @@
+---
+title: "Ripser with Noise"
+author: "Ken Wang"
+date: "10/7/2020"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r,message=FALSE,warning=FALSE}
+library("ripserr")
+library(tidyverse)
+library(fitdistrplus)
+```
+
+```{r}
+noise_num = 100
+noise = data.frame(replicate(2,runif(noise_num,-1000,1000)))
+names(noise) = c("x","y")
+
+radius = 500
+jitter = 50
+data_num = 1000
+a = runif(data_num,0,1) * 2 * pi
+r = rnorm(data_num,radius,jitter)
+data = data.frame(x = r * cos(a), y = r * sin(a))
+
+dataa = rbind(data,noise)
+dataa %>%
+  ggplot()+
+  geom_point(aes(x=x,y=y))
+```
+
+```{r}
+rips = vietoris_rips(dataa)
+
+deg0_num = data_num + noise_num - 1
+plot1 = data.frame(num=1:deg0_num,length=rips$death[1:deg0_num])
+
+plot1 %>%
+  ggplot(aes(x=num,y=length))+
+  geom_bar(stat="identity", fill="steelblue")+
+  theme_minimal()
+```
+
+```{r}
+deg1 = rips[(deg0_num+1):nrow(rips),]
+
+deg1 %>%
+  ggplot()+
+  geom_point(aes(x=birth,y=death))+
+  geom_abline(intercept = 0, slope = 1, color = "blue")+
+  geom_segment(aes(x=birth,y=death,xend=birth,yend=birth))
+```
+
+```{r}
+noise_num = 1000
+noise = data.frame(replicate(2,runif(noise_num,-1000,1000)))
+names(noise) = c("x","y")
+
+radius = 500
+jitter = 50
+data_num = 1000
+a = runif(data_num,0,1) * 2 * pi
+r = rnorm(data_num,radius,jitter)
+data = data.frame(x = r * cos(a), y = r * sin(a))
+
+dataa = rbind(data,noise)
+dataa %>%
+  ggplot()+
+  geom_point(aes(x=x,y=y))
+```
+
+```{r}
+rips = vietoris_rips(dataa)
+
+deg0_num = data_num + noise_num - 1
+plot1 = data.frame(num=1:deg0_num,length=rips$death[1:deg0_num])
+
+plot1 %>%
+  ggplot(aes(x=num,y=length))+
+  geom_bar(stat="identity", fill="steelblue")+
+  theme_minimal()
+```
+
+```{r}
+deg1 = rips[(deg0_num+1):nrow(rips),]
+
+deg1 %>%
+  ggplot()+
+  geom_point(aes(x=birth,y=death))+
+  geom_abline(intercept = 0, slope = 1, color = "blue")+
+  geom_segment(aes(x=birth,y=death,xend=birth,yend=birth))
+```

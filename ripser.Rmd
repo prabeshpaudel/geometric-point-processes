@@ -7,6 +7,8 @@ output:
     df_print: paged
   pdf_document: default
   html_notebook: default
+editor_options:
+  chunk_output_type: inline
 ---
 
 ```{r,message=FALSE,warning=FALSE}
@@ -108,6 +110,23 @@ deg1 %>%
   theme_minimal()
 
 is_norm_dist(deg1$num)
+
+fitBinom=fitdist(data=deg1$num-11, dist="binom", fix.arg=list(size=19),start=list(prob=0.1))
+r_binom = rbinom(length(deg1$num), size = 19, prob = fitBinom$estimate)+11
+
+ks.test(deg1$num,r_binom)
+qqplot(deg1$num,r_binom)
+
+
+probs = 1 - var(deg1$num)/mean(deg1$num)
+trials = mean(deg1$num) / probs
+r_binom2 = rbinom(length(deg1$num), size = as.integer(trials), prob = probs)
+
+ks.test(deg1$num,r_binom2)
+qqplot(deg1$num,r_binom2)
+
+mean(deg1$num)
+var(deg1$num)
 ```
 
 ```{r}
