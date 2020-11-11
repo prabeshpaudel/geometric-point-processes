@@ -17,7 +17,7 @@ def rips (degree, distance):
     return(vertices)
 
 # initation
-num = 5
+num = 8
 x = np.random.uniform(-100,100,num)
 y = np.random.uniform(-100,100,num)
 
@@ -86,10 +86,10 @@ print(sorted_dist_mat)
 #         plt.show()
 #     degree += 1
 
-fig, ax = plt.subplots(11, 5, sharex=True, sharey=True)
+fig, ax = plt.subplots(int(1+num*(num-1)/2), num, sharex=True, sharey=True)
 degree = 0
 while degree < num:
-    dist_index = 10
+    dist_index = int(num*(num-1)/2)
     for distance in edges:
         keeps = rips(degree, distance)
         keep_edges = []
