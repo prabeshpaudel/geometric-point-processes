@@ -1,5 +1,3 @@
 *.html
-anway.*
 bifiltration.cpp
-bi
-*.csv
+__pycache__
