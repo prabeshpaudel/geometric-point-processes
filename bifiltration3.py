@@ -18,7 +18,7 @@ def rips (degree, distance): # function that returns vertices present in the rip
     return(vertices)
 
 ### PARAMETERS ###
-num = 10 # number of points
+num = 5 # number of points
 edge_num = int(num * (num - 1) / 2) # number of edges
 x = np.random.uniform(-100,100,num) # uniform distribution for x
 y = np.random.uniform(-100,100,num) # uniform distribution for y

@@ -44,7 +44,10 @@ distance = 0
 while(degree >= 0 and distance >= 0): # loop for input
     degree = int(input("Enter degree: ")) # input degree
     distance = int(input("Enter distance: ")) # input distance
-    keeps = rips(degree, distance) # vertices present given degree and distance
+    if degree > num - 1:
+        keeps = []
+    else:
+        keeps = rips(degree, distance) # vertices present given degree and distance
     edges = [] # empty array to store edges
     i = 0
     while i < len(keeps):
