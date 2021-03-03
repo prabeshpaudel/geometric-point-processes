@@ -1,3 +1,5 @@
 *.html
 bifiltration.cpp
 __pycache__
+*.csv
+*.xls

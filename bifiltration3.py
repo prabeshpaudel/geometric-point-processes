@@ -76,7 +76,7 @@ print(sorted_edge_mat) # print sorted edge matrix
 results = np.unique(edges_critical, return_counts=True) # counts for # of edges given # of critical points
 print(results)
 
-fig = plt.figure() # print figure
-ax = fig.add_axes([0,0,1,1]) # add axis
-ax.bar(results[0],results[1]) # plot results
-plt.show() # show plot
+# fig = plt.figure() # print figure
+# ax = fig.add_axes([0,0,1,1]) # add axis
+# ax.bar(results[0],results[1]) # plot results
+# plt.show() # show plot
