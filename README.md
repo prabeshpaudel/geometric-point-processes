@@ -19,3 +19,9 @@ bifiltration3.py\
 input: none\
 parameters: number of points\
 output: distance matrix, sorted edge lengths, edge dictionary, sorted distance matrix, sorted edge matrix, the distribution of number of critical points, a graph of the distribution
+
+\
+bifiltration4.py\
+input: none\
+parameters: number of points, number of trials\
+output: (to csv) list of the number of unique critical points

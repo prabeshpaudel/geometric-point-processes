@@ -3,3 +3,4 @@ bifiltration.cpp
 __pycache__
 *.csv
 *.xls
+plots
