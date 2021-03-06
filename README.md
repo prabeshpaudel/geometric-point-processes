@@ -24,4 +24,4 @@ output: distance matrix, sorted edge lengths, edge dictionary, sorted distance m
 bifiltration4.py\
 input: none\
 parameters: number of points, number of trials\
-output: (to csv) list of the number of unique critical points
+output: (to csv) distribution of the number of critical-bigrades for edges
