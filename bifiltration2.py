@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib import collections as mc
 import math
 
+np.random.seed(3)
+
 ### FUNCTIONS ###
 def distance(a,b): # function that returns distance between two points
     return(abs(math.sqrt((x[a] - x[b]) ** 2 + (y[a] - y[b]) ** 2)))
@@ -18,9 +20,15 @@ def rips (degree, distance): # function that returns vertices present in the rip
     return(vertices)
 
 ### PARAMETERS ###
-num = 5 # number of points
+num = 4 # number of points
 x = np.random.uniform(-100,100,num) # uniform distribution for x
 y = np.random.uniform(-100,100,num) # uniform distribution for y
+
+points = ""
+
+for i in range(len(x)):
+    points += "(" + str(x[i]) + ", " + str(y[i]) + ")"
+
 
 ### INITIATION ###
 dist_mat = np.zeros((num,num)) # empty space to store distance matrix
@@ -72,9 +80,13 @@ while degree < num: # loop for all degrees
         ax[dist_index,num-1-degree].add_collection(lc) # add edges to the scatterplot
         ax[dist_index,num-1-degree].set_xlim(-100,100) # set x limit for scatterplot
         ax[dist_index,num-1-degree].set_ylim(-100,100) # set y limit for scatterplot
+        # ax.axes.xaxis.set_visible(False)
+        # ax.axes.yaxis.set_visible(False)
         ax[dist_index,num-1-degree].margins(0.1) # set margins for scatterplot
-        #ax[dist_index,num-1-degree].xaxis.set_visible(False) # disable x axis
-        #ax[dist_index,num-1-degree].yaxis.set_visible(False) # disable y axis
+        # ax[dist_index,num-1-degree].xaxis.set_visible(False) # disable x axis
+        # ax[dist_index,num-1-degree].yaxis.set_visible(False) # disable y axis
+        # ax[dist_index,num-1-degree].xaxis.set_ticklabels([]) # disable x axis
+        # ax[dist_index,num-1-degree].yaxis.set_ticklabels([]) # disable y axis
         plt.setp(ax[-1,num-1-degree],xlabel=degree) # setup x labels for the plot
         plt.setp(ax[dist_index,0],ylabel=int(distance)) # set up y labels for the plot
         dist_index -= 1 # decrease distance index
@@ -82,3 +94,6 @@ while degree < num: # loop for all degrees
     degree += 1
 
 plt.show() # show plot
+
+print("############")
+print(points)
