@@ -1,4 +1,5 @@
 # geometric-point-processes
+
 CIR 2020-21
 
 Files:\
@@ -25,3 +26,13 @@ bifiltration4.py\
 input: none\
 parameters: number of points, number of trials\
 output: (to csv) distribution of the number of critical-bigrades for edges
+
+\bifiltration5.py\
+input: none\
+parameters: number of points\
+output: (to console) connectivity matrix for all critial-bigrades
+
+\bifiltration6.py\
+input: none\
+parameters: number of points, number of trials\
+output: (to csv and txt) connectivity matrix, sum of connectivity matrix

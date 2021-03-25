@@ -44,15 +44,18 @@ while i < num:
         k += 1
     i += 1
 edges = np.sort(edges) # sort edges
+print("\nDistance Matrix")
 print(dist_mat) # print distance matrix
-print(edges) # print sorted edges
-print(edges_dist) # print edge dictionary
+# print(edges) # print sorted edges
+# print(edges_dist) # print edge dictionary
 
 # Sorted Distance Matrix
 i = 0
 while i < num:
     sorted_dist_mat[i,] = np.sort(dist_mat[i,]) # sort distance matrix by row
     i += 1
+
+print("\nSorted Distance Matrix")
 print(sorted_dist_mat) # print sorted distance matrix
 
 # Sorted Edge Matrix
@@ -69,6 +72,8 @@ while i < edge_num: # loop through all edges
     filler = np.unique(sorted_edge_mat[i,]) # unique critical distances for the edge
     edges_critical[i] = len(filler) # length of unique critical distances or the number of critical points
     i += 1
+
+print("\nSorted Edge Matrix")
 print(sorted_edge_mat) # print sorted edge matrix
 
 ### RESULTS ###
