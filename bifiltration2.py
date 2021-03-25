@@ -85,8 +85,8 @@ while degree < num: # loop for all degrees
         ax[dist_index,num-1-degree].margins(0.1) # set margins for scatterplot
         # ax[dist_index,num-1-degree].xaxis.set_visible(False) # disable x axis
         # ax[dist_index,num-1-degree].yaxis.set_visible(False) # disable y axis
-        # ax[dist_index,num-1-degree].xaxis.set_ticklabels([]) # disable x axis
-        # ax[dist_index,num-1-degree].yaxis.set_ticklabels([]) # disable y axis
+        ax[dist_index,num-1-degree].xaxis.set_ticklabels([]) # disable x axis
+        ax[dist_index,num-1-degree].yaxis.set_ticklabels([]) # disable y axis
         plt.setp(ax[-1,num-1-degree],xlabel=degree) # setup x labels for the plot
         plt.setp(ax[dist_index,0],ylabel=int(distance)) # set up y labels for the plot
         dist_index -= 1 # decrease distance index
