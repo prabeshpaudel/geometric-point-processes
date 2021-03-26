@@ -36,4 +36,4 @@ CIR 2020-21
 ### bifiltration6.py
 * input: *none*
 * parameters: *number of points, number of trials*
-* output: *(to csv and txt) connectivity matrix, sum of connectivity matrix*
+* output: *(to txt) connectivity matrix, (to csv) sum of connectivity matrix*
