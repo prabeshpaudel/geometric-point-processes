@@ -1,8 +1,10 @@
-*.html
+
 bifiltration.cpp
 __pycache__
+
+
+# related to data
+*.html
 *.csv
 *.xls
-plots
-bi5 results
-bi6 results
+*results
