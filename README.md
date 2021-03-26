@@ -3,10 +3,10 @@
 CIR 2020-21
 
 Files:\
-bifiltration.py\
-input: degree and distance\
-parameters: number of points\
-output: distance matrix, sorted distance matrix, a graph of the rips complex\
+**bifiltration.py**
+* input: degree and distance
+* parameters: number of points
+* output: distance matrix, sorted distance matrix, a graph of the rips complex\
 (Enter a negative degree and distance to quit)
 
 \
