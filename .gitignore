@@ -1,10 +1,12 @@
 ripser.cpp
 bifiltration.cpp
 __pycache__
+.Rhistory
 
 
 # related to data
 *.html
 *.csv
 *.xls
+*.txt
 *results

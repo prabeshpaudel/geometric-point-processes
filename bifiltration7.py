@@ -22,13 +22,20 @@ def rips (degree, distance): # function that returns vertices present in the rip
     return(vertices)
 
 ### PARAMETERS ###
-num = 10 # number of points
-trial = 5 # number of trials
+num = 40 # number of points
+trial = 1 # number of trials
 edge_num = int(num * (num - 1) / 2) # number of edges
 connected_sum = pd.DataFrame(0, index = list(range(edge_num,-1,-1)), columns = list(range(num-1,-1,-1)))
 
+# interested points
+num_yellow = 5
+yellow_degree = [2, 3, 3, 4, 4]
+yellow_distance = [727, 732, 739, 719, 729]
+yellow_con = pd.DataFrame(np.zeros((num_yellow, trial)))
+
 t = 0
 while t < trial:
+    print(t)
     ### INITIATION ###
     x = np.random.uniform(-100,100,num) # uniform distribution for x
     y = np.random.uniform(-100,100,num) # uniform distribution for y
@@ -123,6 +130,7 @@ while t < trial:
             if connected.iloc[i-1,deg] == -1: # if not a critical bi-grade
                 connected.iloc[i-1,deg] = connected.iloc[i,deg] # follow the previous critical bigrade
 
+    # print points and connected matrix to txt
     # if t < 10:
     #     with open('bi6_results.txt', 'a') as file:
     #         content_x = str(x)
@@ -140,9 +148,13 @@ while t < trial:
     connected.reset_index(drop=True, inplace=True) # delete index for connected
     connected_sum = connected_sum.add(connected, axis = 1) # add to the sum of connected matrices
 
+    # for yellow in range(0,num_yellow):
+    #     yellow_con.at[yellow,t] = connected.at[yellow_distance[yellow],yellow_degree[yellow]]
+        # print(connected.at[yellow_distance[yellow],yellow_degree[yellow]])
+    
     t += 1
 
-print("\nConnected Component Sum Matrix")
-print(connected_sum)
+with open('yellow.txt', 'a') as file:
+    file.write(yellow_con.to_string())
 # connected_sum.to_csv('bi6_results.csv', index=False)
 
